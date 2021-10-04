@@ -1,9 +1,7 @@
 package error
 
-import "errors"
-
 type SystemError struct {
-	Error   error              `json:"error"`
+	Error   error              `json:"error"` // Original errors from another services
 	Code    int                `json:"code"`
 	Message SystemErrorMessage `json:"message"`
 }
@@ -15,14 +13,13 @@ type SystemErrorMessage struct {
 
 var (
 	baseErrs = map[int]SystemError{
-		0: newError(0, errors.New("internal_server"), "Terjadi kendala pada server", "Internal server error"),
+		0: newError(0, "Terjadi kendala pada server", "Internal server error"),
 	}
 )
 
-func newError(code int, err error, messageID, messageEn string) SystemError {
+func newError(code int, messageID, messageEn string) SystemError {
 	return SystemError{
-		Code:  code,
-		Error: err,
+		Code: code,
 		Message: SystemErrorMessage{
 			ID: messageID,
 			En: messageEn,
